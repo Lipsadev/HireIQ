@@ -3,6 +3,7 @@ import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,23 +44,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${poppins.variable} font-sans antialiased`}>
-        <ThemeProvider>
-          {children}
-          <Toaster
-            theme="dark"
-            position="top-right"
-            toastOptions={{
-              style: {
-                background: "#1F2A44",
-                border: "1px solid rgba(198,167,94,0.25)",
-                color: "#F1F5F9",
-              },
-            }}
-          />
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.variable} ${poppins.variable} font-sans antialiased`}>
+          <ThemeProvider>
+            {children}
+            <Toaster
+              theme="dark"
+              position="top-right"
+              toastOptions={{
+                style: {
+                  background: "#1F2A44",
+                  border: "1px solid rgba(198,167,94,0.25)",
+                  color: "#F1F5F9",
+                },
+              }}
+            />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

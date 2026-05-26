@@ -19,6 +19,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { getStageColor } from "@/lib/utils";
+import { useUser } from "@clerk/nextjs";
+import { getProfile } from "@/lib/profile";
+import { useEffect, useState } from "react";
 
 const STAT_CARDS = [
   {
@@ -56,6 +59,20 @@ const STAT_CARDS = [
 ];
 
 export default function DashboardPage() {
+  const { user, isLoaded } = useUser();
+  const [firstName, setFirstName] = useState("HR Admin");
+
+  useEffect(() => {
+    if (isLoaded && user?.firstName) {
+      setFirstName(user.firstName);
+    } else {
+      const profile = getProfile();
+      if (profile?.fullName) {
+        setFirstName(profile.fullName.split(" ")[0]);
+      }
+    }
+  }, [isLoaded, user]);
+
   const recentCandidates = CANDIDATES.slice(0, 5);
 
   return (
@@ -84,7 +101,7 @@ export default function DashboardPage() {
               </span>
             </div>
             <h2 className="text-2xl font-bold font-display text-slate-100">
-              Good afternoon, <span className="text-gradient-gold">HR Admin</span> 👋
+              Good afternoon, <span className="text-gradient-gold">{firstName}</span> 👋
             </h2>
             <p className="text-sm text-slate-400 mt-1">
               You have{" "}

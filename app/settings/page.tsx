@@ -15,10 +15,11 @@ import {
   Save,
   Upload,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
-
 import { useTheme } from "@/components/ThemeProvider";
+import { useUser } from "@clerk/nextjs";
+import { getProfile, saveProfile, getInitials, type UserProfile } from "@/lib/profile";
 
 const TABS = [
   { id: "profile", label: "Profile", icon: User },
@@ -41,9 +42,38 @@ const INTEGRATIONS = [
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
   const { theme, setTheme, accentColor, setAccentColor } = useTheme();
-  
+  const { user, isLoaded } = useUser();
+
   const darkMode = theme === "dark";
   const setDarkMode = (isDark: boolean) => setTheme(isDark ? "dark" : "light");
+
+  // Profile form state — loaded from localStorage + Clerk
+  const [profileForm, setProfileForm] = useState<UserProfile>({
+    fullName: "",
+    jobTitle: "",
+    email: "",
+    phone: "",
+    company: "",
+    location: "",
+  });
+
+  // Load profile on mount
+  useEffect(() => {
+    const saved = getProfile();
+    if (saved) {
+      setProfileForm(saved);
+    } else if (isLoaded && user) {
+      setProfileForm((prev) => ({
+        ...prev,
+        fullName: user.fullName || "",
+        email: user.primaryEmailAddress?.emailAddress || "",
+        jobTitle: (user.unsafeMetadata?.jobTitle as string) || "",
+        phone: (user.unsafeMetadata?.phone as string) || "",
+        company: (user.unsafeMetadata?.company as string) || "",
+        location: (user.unsafeMetadata?.location as string) || "",
+      }));
+    }
+  }, [isLoaded, user]);
 
   const [notifications, setNotifications] = useState({
     newApplications: true,
@@ -55,6 +85,7 @@ export default function SettingsPage() {
   });
 
   const handleSave = () => {
+    saveProfile(profileForm);
     toast.success("Settings saved successfully!");
   };
 
@@ -108,11 +139,22 @@ export default function SettingsPage() {
                   Profile Information
                 </h3>
                 <div className="flex items-center gap-5">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-xl font-bold text-slate-900">
-                    HR
-                  </div>
+                  {user?.imageUrl ? (
+                    <img
+                      src={user.imageUrl}
+                      alt={profileForm.fullName}
+                      className="w-16 h-16 rounded-2xl object-cover border border-[rgba(198,167,94,0.3)]"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-xl font-bold text-slate-900">
+                      {getInitials(profileForm.fullName || "HR")}
+                    </div>
+                  )}
                   <div>
-                    <p className="text-sm font-medium text-slate-200 mb-1">HR Admin</p>
+                    <p className="text-sm font-medium text-slate-200 mb-1">
+                      {profileForm.fullName || "Your Name"}
+                    </p>
+                    <p className="text-xs text-slate-500 mb-2">{profileForm.jobTitle || "Your Title"}</p>
                     <button className="text-xs text-gold-400 hover:underline flex items-center gap-1.5">
                       <Upload size={11} />
                       Upload photo
@@ -121,17 +163,20 @@ export default function SettingsPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
-                    { label: "Full Name", value: "HR Admin", placeholder: "Your full name" },
-                    { label: "Job Title", value: "Head of Talent Acquisition", placeholder: "Your job title" },
-                    { label: "Email", value: "admin@hireiq.ai", placeholder: "Email address" },
-                    { label: "Phone", value: "+1 (415) 555-0100", placeholder: "Phone number" },
-                    { label: "Company", value: "HireIQ Inc.", placeholder: "Company name" },
-                    { label: "Location", value: "San Francisco, CA", placeholder: "Location" },
-                  ].map(({ label, value, placeholder }) => (
+                    { label: "Full Name", key: "fullName" as const, placeholder: "Your full name" },
+                    { label: "Job Title", key: "jobTitle" as const, placeholder: "Your job title" },
+                    { label: "Email", key: "email" as const, placeholder: "Email address" },
+                    { label: "Phone", key: "phone" as const, placeholder: "Phone number" },
+                    { label: "Company", key: "company" as const, placeholder: "Company name" },
+                    { label: "Location", key: "location" as const, placeholder: "Location" },
+                  ].map(({ label, key, placeholder }) => (
                     <div key={label}>
                       <label className="text-xs text-slate-500 font-medium block mb-1.5">{label}</label>
                       <input
-                        defaultValue={value}
+                        value={profileForm[key]}
+                        onChange={(e) =>
+                          setProfileForm((prev) => ({ ...prev, [key]: e.target.value }))
+                        }
                         placeholder={placeholder}
                         className="w-full bg-white/6 border border-[rgba(198,167,94,0.12)] rounded-xl px-3 py-2.5 text-sm text-slate-200 outline-none focus:border-gold-500/50 transition-colors placeholder:text-slate-600"
                       />

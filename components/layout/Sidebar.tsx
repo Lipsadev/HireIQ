@@ -8,18 +8,19 @@ import {
   Users,
   FileText,
   BarChart3,
-  MessageSquare,
   Mail,
   Settings,
   Sparkles,
   ChevronLeft,
   ChevronRight,
   BrainCircuit,
-  Search,
-  Bell,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useUser, useClerk } from "@clerk/nextjs";
+import { getProfile, getInitials } from "@/lib/profile";
+import { useEffect } from "react";
 
 const NAV_ITEMS = [
   {
@@ -39,21 +40,41 @@ const NAV_ITEMS = [
   },
   {
     group: "Insights",
-    items: [
-      { href: "/analytics", label: "Analytics", icon: BarChart3 },
-    ],
+    items: [{ href: "/analytics", label: "Analytics", icon: BarChart3 }],
   },
   {
     group: "Workspace",
-    items: [
-      { href: "/settings", label: "Settings", icon: Settings },
-    ],
+    items: [{ href: "/settings", label: "Settings", icon: Settings }],
   },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const { user, isLoaded } = useUser();
+  const { signOut } = useClerk();
+
+  // Get local profile for extra fields
+  const [localProfile, setLocalProfile] = useState<ReturnType<typeof getProfile>>(null);
+  useEffect(() => {
+    setLocalProfile(getProfile());
+  }, []);
+
+  // Display name: prefer Clerk user name, fall back to local profile, then default
+  const displayName =
+    (isLoaded && user?.fullName) ||
+    localProfile?.fullName ||
+    "HR Admin";
+
+  const displayEmail =
+    (isLoaded && user?.primaryEmailAddress?.emailAddress) ||
+    localProfile?.email ||
+    "admin@hireiq.ai";
+
+  const initials = getInitials(displayName);
+
+  // Avatar: use Clerk profile image if available
+  const avatarUrl = isLoaded && user?.imageUrl ? user.imageUrl : null;
 
   return (
     <motion.aside
@@ -94,7 +115,8 @@ export default function Sidebar() {
             )}
             <ul className="space-y-0.5">
               {group.items.map(({ href, label, icon: Icon }) => {
-                const isActive = pathname === href || pathname.startsWith(href + "/");
+                const isActive =
+                  pathname === href || pathname.startsWith(href + "/");
                 return (
                   <li key={href}>
                     <Link
@@ -108,8 +130,10 @@ export default function Sidebar() {
                     >
                       <Icon
                         className={cn(
-                          "w-4.5 h-4.5 shrink-0",
-                          isActive ? "text-gold-400" : "text-slate-500 group-hover:text-slate-300"
+                          "shrink-0",
+                          isActive
+                            ? "text-gold-400"
+                            : "text-slate-500 group-hover:text-slate-300"
                         )}
                         size={18}
                       />
@@ -138,14 +162,63 @@ export default function Sidebar() {
             </ul>
           </div>
         ))}
+
+        {/* Log Out Button */}
+        <div className="mt-2 pt-2 border-t border-[rgba(198,167,94,0.08)]">
+          <button
+            onClick={() => signOut().then(() => window.location.href = "/")}
+            className={cn(
+              "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative text-red-400/80 hover:text-red-400 hover:bg-red-500/10"
+            )}
+          >
+            <LogOut
+              className="shrink-0 text-red-400/60 group-hover:text-red-400"
+              size={18}
+            />
+            <AnimatePresence>
+              {!collapsed && (
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="whitespace-nowrap"
+                >
+                  Log Out
+                </motion.span>
+              )}
+            </AnimatePresence>
+            {collapsed && (
+              <div className="absolute left-full ml-3 px-2 py-1 bg-navy-600 border border-[rgba(239,68,68,0.2)] rounded-md text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50">
+                Log Out
+              </div>
+            )}
+          </button>
+        </div>
       </nav>
 
       {/* User info */}
       <div className="p-3 border-t border-[rgba(198,167,94,0.12)]">
-        <div className={cn("flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer", collapsed && "justify-center")}>
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-xs font-bold text-slate-900 shrink-0">
-            HR
-          </div>
+        <Link
+          href="/settings"
+          className={cn(
+            "flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer",
+            collapsed && "justify-center"
+          )}
+        >
+          {/* Avatar */}
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={displayName}
+              className="w-8 h-8 rounded-full object-cover border border-[rgba(198,167,94,0.3)] shrink-0"
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-xs font-bold text-slate-900 shrink-0">
+              {initials}
+            </div>
+          )}
+
           <AnimatePresence>
             {!collapsed && (
               <motion.div
@@ -154,12 +227,14 @@ export default function Sidebar() {
                 exit={{ opacity: 0 }}
                 className="min-w-0"
               >
-                <p className="text-sm font-medium text-slate-100 truncate">HR Admin</p>
-                <p className="text-xs text-slate-500 truncate">admin@hireiq.ai</p>
+                <p className="text-sm font-medium text-slate-100 truncate">
+                  {displayName}
+                </p>
+                <p className="text-xs text-slate-500 truncate">{displayEmail}</p>
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </Link>
       </div>
 
       {/* Collapse button */}

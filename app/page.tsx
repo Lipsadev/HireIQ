@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { useUser, useAuth } from "@clerk/nextjs";
 import {
   Sparkles,
   ArrowRight,
@@ -17,7 +18,6 @@ import {
   Zap,
   Globe,
   ChevronRight,
-  Play,
   TrendingUp,
   Target,
   Clock,
@@ -157,9 +157,16 @@ export default function LandingPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   const [activeTab, setActiveTab] = useState(0);
+  const { user } = useUser();
+  const { isSignedIn } = useAuth();
+  
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[#0D1117] text-slate-100 overflow-x-hidden">
+    <div className="landing-page-container min-h-screen bg-[#0D1117] text-slate-100 overflow-x-hidden">
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 border-b border-[rgba(198,167,94,0.1)] bg-[#0D1117]/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -179,12 +186,45 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="btn-outline text-sm py-2 px-4">
-              Sign In
-            </Link>
-            <Link href="/dashboard" className="btn-gold text-sm py-2 px-4">
-              Get Started Free
-            </Link>
+            {!mounted ? (
+              /* Premium shimmering skeleton loading state to prevent shift & hydration mismatch */
+              <div className="w-[180px] h-9 bg-white/5 animate-pulse rounded-xl border border-[rgba(198,167,94,0.05)]" />
+            ) : isSignedIn ? (
+              /* Signed IN — avatar circle → dashboard */
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-2.5 group"
+                title="Go to Dashboard"
+              >
+                <div className="relative">
+                  {user?.imageUrl ? (
+                    <img
+                      src={user.imageUrl}
+                      alt={user.fullName || "User"}
+                      className="w-9 h-9 rounded-full object-cover border-2 border-[rgba(198,167,94,0.4)] group-hover:border-gold-500 transition-all shadow-lg"
+                    />
+                  ) : (
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-sm font-bold text-slate-900 border-2 border-[rgba(198,167,94,0.4)] group-hover:border-gold-500 transition-all shadow-lg shadow-gold-500/20">
+                      {(user?.firstName?.[0] || user?.fullName?.[0] || user?.primaryEmailAddress?.emailAddress?.[0] || "U").toUpperCase()}
+                    </div>
+                  )}
+                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-400 border-2 border-[#0D1117]" />
+                </div>
+                <span className="text-sm text-slate-300 group-hover:text-gold-400 transition-colors hidden sm:block font-medium">
+                  Dashboard
+                </span>
+              </Link>
+            ) : (
+              /* Signed OUT — auth buttons */
+              <>
+                <Link href="/sign-in" className="btn-outline text-sm py-2 px-4">
+                  Sign In
+                </Link>
+                <Link href="/sign-up" className="btn-gold text-sm py-2 px-4">
+                  Get Started Free
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </nav>
@@ -267,18 +307,9 @@ export default function LandingPage() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
             >
-              <Link href="/dashboard" className="btn-gold text-base py-4 px-8 gap-2.5">
+              <Link href="/sign-up" className="btn-gold text-base py-4 px-8 gap-2.5">
                 Start Free — No Card Required
                 <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-2.5 text-slate-300 hover:text-gold-400 transition-colors text-sm py-4 px-6"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                  <Play size={12} className="ml-0.5" />
-                </div>
-                Watch Demo
               </Link>
             </motion.div>
 
@@ -404,7 +435,7 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="glass-card p-6 text-center group hover:border-[rgba(198,167,94,0.35)] transition-all"
+                className="glass-card-hover p-6 text-center group"
               >
                 <div className="w-10 h-10 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center text-gold-400 mx-auto mb-3">
                   {stat.icon}
@@ -618,7 +649,7 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className={`relative glass-card p-7 flex flex-col ${
+                className={`relative glass-card-hover p-7 flex flex-col ${
                   plan.popular ? "border-gold-500/40 shadow-gold" : ""
                 }`}
               >
@@ -681,11 +712,11 @@ export default function LandingPage() {
                 Join 500+ companies hiring smarter with HireIQ AI.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/dashboard" className="btn-gold text-base py-4 px-8">
+                <Link href="/sign-up" className="btn-gold text-base py-4 px-8">
                   Start Free Trial <ArrowRight size={16} />
                 </Link>
-                <Link href="/dashboard" className="btn-outline text-base py-4 px-8">
-                  Book a Demo
+                <Link href="/sign-in" className="btn-outline text-base py-4 px-8">
+                  Sign In
                 </Link>
               </div>
               <p className="text-xs text-slate-600 mt-5">No credit card required · 14-day free trial · Cancel anytime</p>

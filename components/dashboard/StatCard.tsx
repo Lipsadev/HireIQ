@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -43,6 +43,7 @@ export default function StatCard({
   delay = 0,
 }: StatCardProps) {
   const isPositive = change >= 0;
+  const [hovered, setHovered] = useState(false);
 
   return (
     <motion.div
@@ -50,19 +51,47 @@ export default function StatCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="glass-card p-5 group cursor-default relative overflow-hidden"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="p-5 group cursor-default relative overflow-hidden rounded-2xl backdrop-blur-md"
+      style={{
+        background: "rgba(var(--bg-card-rgb), 0.6)",
+        border: `1px solid ${hovered ? `${accentColor}65` : "rgba(var(--gold-rgb),0.15)"}`,
+        boxShadow: hovered
+          ? `0 0 30px ${accentColor}38, 0 0 10px ${accentColor}20, 0 12px 40px rgba(0,0,0,0.55), 0 4px 24px rgba(0,0,0,0.4)`
+          : "0 4px 24px rgba(0,0,0,0.4), 0 1px 4px rgba(var(--gold-rgb),0.1)",
+        transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+      }}
     >
-      {/* Background glow */}
+      {/* Background glow blob */}
       <div
-        className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-3xl"
-        style={{ background: accentColor, transform: "translate(30%, -30%)" }}
+        className="absolute top-0 right-0 w-36 h-36 rounded-full pointer-events-none blur-3xl"
+        style={{
+          background: accentColor,
+          transform: "translate(35%, -35%)",
+          opacity: hovered ? 0.18 : 0,
+          transition: "opacity 0.4s ease",
+        }}
+      />
+
+      {/* Bottom edge shimmer line */}
+      <div
+        className="absolute bottom-0 left-4 right-4 h-px rounded-full pointer-events-none"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${accentColor}80, transparent)`,
+          opacity: hovered ? 1 : 0,
+          transition: "opacity 0.3s ease",
+        }}
       />
 
       {/* Top row */}
       <div className="flex items-start justify-between mb-4 relative">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center"
-          style={{ background: `${accentColor}20`, border: `1px solid ${accentColor}30` }}
+          className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300"
+          style={{
+            background: hovered ? `${accentColor}28` : `${accentColor}20`,
+            border: `1px solid ${hovered ? `${accentColor}50` : `${accentColor}30`}`,
+          }}
         >
           <div style={{ color: accentColor }}>{icon}</div>
         </div>

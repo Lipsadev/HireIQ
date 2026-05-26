@@ -286,10 +286,9 @@ export default function AnalyticsPage() {
                       initial={{ width: 0 }}
                       animate={{ width: `${progress}%` }}
                       transition={{ duration: 0.8, delay: 0.5 }}
-                      className="h-full rounded-full"
-                      style={{
-                        background: progress >= 80 ? "#10B981" : progress >= 50 ? "#F59E0B" : "#EF4444",
-                      }}
+                      className={`h-full rounded-full ${
+                        progress >= 80 ? "bg-green-500" : progress >= 50 ? "bg-yellow-500" : "bg-red-500"
+                      }`}
                     />
                   </div>
                 </div>

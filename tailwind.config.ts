@@ -69,14 +69,14 @@ const config: Config = {
         "gradient-card":
           "linear-gradient(145deg, rgba(31,42,68,0.8) 0%, rgba(17,24,39,0.9) 100%)",
         "glow-gold":
-          "radial-gradient(circle at center, rgba(198,167,94,0.15) 0%, transparent 70%)",
+          "radial-gradient(circle at center, rgba(var(--gold-rgb), 0.15), transparent 70%)",
       },
       boxShadow: {
-        gold: "0 0 20px rgba(198, 167, 94, 0.15), 0 4px 20px rgba(0,0,0,0.4)",
+        gold: "0 0 20px rgba(var(--gold-rgb), 0.15), 0 4px 20px rgba(0,0,0,0.4)",
         "gold-lg":
-          "0 0 40px rgba(198, 167, 94, 0.2), 0 8px 40px rgba(0,0,0,0.5)",
-        card: "0 4px 24px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(198, 167, 94, 0.1)",
-        glow: "0 0 30px rgba(198, 167, 94, 0.3)",
+          "0 0 40px rgba(var(--gold-rgb), 0.2), 0 8px 40px rgba(0,0,0,0.5)",
+        card: "0 4px 24px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(var(--gold-rgb), 0.1)",
+        glow: "0 0 30px rgba(var(--gold-rgb), 0.3)",
       },
       animation: {
         "fade-up": "fadeUp 0.6s ease forwards",

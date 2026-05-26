@@ -74,6 +74,49 @@
     --text-muted-rgb: 100, 116, 139;
   }
 
+  /* Force marketing landing page to always preserve dark variables, shielding it from dynamic light mode updates */
+  .landing-page-container {
+    --bg-main: #111827 !important;
+    --bg-sidebar: #141c2e !important;
+    --bg-card: #1f2a44 !important;
+    --bg-card-hover: #253352 !important;
+    --text-main: #f1f5f9 !important;
+    --text-secondary: #94a3b8 !important;
+    --text-muted: #64748b !important;
+    --border-color: rgba(198, 167, 94, 0.15) !important;
+    --border-hover: rgba(198, 167, 94, 0.35) !important;
+
+    --bg-main-rgb: 17, 24, 39 !important;
+    --bg-sidebar-rgb: 20, 28, 46 !important;
+    --bg-card-rgb: 31, 42, 68 !important;
+    --bg-card-hover-rgb: 37, 51, 82 !important;
+    --text-main-rgb: 241, 245, 249 !important;
+    --text-secondary-rgb: 148, 163, 184 !important;
+    --text-muted-rgb: 100, 116, 139 !important;
+
+    /* Lock landing page accent color back to the designed original brand gold */
+    --gold: #C6A75E !important;
+    --gold-rgb: 198, 167, 94 !important;
+    --gold-50: #FAF4E6 !important;
+    --gold-100: #F2E6C4 !important;
+    --gold-200: #E9D49D !important;
+    --gold-300: #DFC275 !important;
+    --gold-400: #D6B04E !important;
+    --gold-500: #C6A75E !important;
+    --gold-600: #A8873A !important;
+    --gold-700: #8A6B2C !important;
+    --gold-800: #6C521F !important;
+    --gold-900: #4E3A12 !important;
+
+    --navy: var(--bg-card) !important;
+    --background: var(--bg-main) !important;
+    --surface: var(--bg-card) !important;
+    --surface-elevated: var(--bg-card-hover) !important;
+    --border: var(--border-color) !important;
+    --border-bright: var(--border-hover) !important;
+    --text-primary: var(--text-main) !important;
+  }
+
   * {
     box-sizing: border-box;
     margin: 0;
@@ -162,17 +205,17 @@
 @layer components {
   /* Glass card */
   .glass-card {
-    @apply bg-navy-600/60 backdrop-blur-md border border-[rgba(198,167,94,0.15)] rounded-2xl;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 1px 4px rgba(198,167,94,0.1);
+    @apply bg-navy-600/60 backdrop-blur-md border border-[rgba(var(--gold-rgb),0.15)] rounded-2xl;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 1px 4px rgba(var(--gold-rgb),0.1);
   }
 
   .glass-card-hover {
     @apply glass-card transition-all duration-300;
   }
   .glass-card-hover:hover {
-    border-color: rgba(198, 167, 94, 0.35);
-    box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 20px rgba(198,167,94,0.15);
-    transform: translateY(-2px);
+    border-color: rgba(var(--gold-rgb), 0.45) !important;
+    box-shadow: 0 0 30px rgba(var(--gold-rgb), 0.28), 0 12px 40px rgba(0, 0, 0, 0.6) !important;
+    transform: translateY(-4px);
   }
 
   /* Gold gradient text */
@@ -187,10 +230,10 @@
   .btn-gold {
     @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-slate-900 transition-all duration-300;
     background: linear-gradient(135deg, #C6A75E 0%, #E8DCC8 60%, #C6A75E 100%);
-    box-shadow: 0 4px 15px rgba(198,167,94,0.3);
+    box-shadow: 0 4px 15px rgba(var(--gold-rgb),0.3);
   }
   .btn-gold:hover {
-    box-shadow: 0 8px 25px rgba(198,167,94,0.5);
+    box-shadow: 0 8px 25px rgba(var(--gold-rgb),0.5);
     transform: translateY(-1px);
   }
 
