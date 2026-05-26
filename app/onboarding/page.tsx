@@ -215,7 +215,7 @@ export default function OnboardingPage() {
             </motion.div>
           </form>
 
-          <p className="text-center text-xs text-slate-600 mt-4">
+          <p className="text-center text-xs text-slate-400 mt-4">
             You can update this anytime in{" "}
             <span className="text-gold-500/70">Settings → Profile</span>
           </p>

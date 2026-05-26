@@ -318,7 +318,7 @@ export default function LandingPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-xs text-slate-600 flex items-center justify-center gap-2"
+              className="text-xs text-slate-500 flex items-center justify-center gap-2"
             >
               <span className="flex">
                 {[1, 2, 3, 4, 5].map((i) => (
@@ -408,7 +408,7 @@ export default function LandingPage() {
       {/* ─────────── TRUSTED BY ─────────── */}
       <section className="py-16 border-t border-[rgba(198,167,94,0.08)]">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-center text-xs text-slate-600 uppercase tracking-widest mb-8">
+          <p className="text-center text-xs text-slate-500 uppercase tracking-widest mb-8">
             Trusted by teams at
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
@@ -719,7 +719,7 @@ export default function LandingPage() {
                   Sign In
                 </Link>
               </div>
-              <p className="text-xs text-slate-600 mt-5">No credit card required · 14-day free trial · Cancel anytime</p>
+              <p className="text-xs text-slate-500 mt-5">No credit card required · 14-day free trial · Cancel anytime</p>
             </div>
           </motion.div>
         </div>

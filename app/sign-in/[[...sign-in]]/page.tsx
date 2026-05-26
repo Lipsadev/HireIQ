@@ -59,13 +59,15 @@ export default function SignInPage() {
                 "border border-[rgba(198,167,94,0.2)] bg-white/5 text-slate-200 hover:bg-white/10 hover:border-[rgba(198,167,94,0.4)] transition-all rounded-xl",
               socialButtonsBlockButtonText: "font-medium",
               dividerLine: "bg-[rgba(198,167,94,0.15)]",
-              dividerText: "text-slate-500 text-xs",
+              dividerText: "text-slate-400 text-xs",
               formFieldLabel: "text-slate-400 text-xs font-medium",
               formFieldInput:
                 "bg-[#141c2e] border border-[rgba(198,167,94,0.2)] text-slate-100 rounded-xl focus:border-[rgba(198,167,94,0.6)] focus:ring-0 placeholder:text-slate-600",
               formButtonPrimary:
                 "bg-gradient-to-r from-gold-600 to-gold-400 text-slate-900 font-semibold rounded-xl hover:opacity-90 transition-all shadow-lg shadow-gold-500/25",
+              footerActionText: "text-slate-300 font-medium",
               footerActionLink: "text-gold-400 hover:text-gold-300",
+              footerText: "text-slate-400 font-medium",
               identityPreviewEditButton: "text-gold-400",
               formFieldSuccessText: "text-green-400",
               formFieldErrorText: "text-red-400",
@@ -77,7 +79,7 @@ export default function SignInPage() {
         />
 
         {/* Back to home */}
-        <p className="text-center text-xs text-slate-600 mt-6">
+        <p className="text-center text-xs text-slate-400 mt-6">
           <Link href="/" className="hover:text-gold-400 transition-colors">
             ← Back to homepage
           </Link>
