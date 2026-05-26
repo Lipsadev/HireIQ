@@ -1,6 +1,7 @@
 "use client";
 
 import { SignUp } from "@clerk/nextjs";
+import { dark } from "@clerk/nextjs/themes";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
 
@@ -39,41 +40,45 @@ export default function SignUpPage() {
         {/* Clerk SignUp with custom appearance */}
         <SignUp
           appearance={{
+            baseTheme: dark,
             variables: {
               colorPrimary: "#C6A75E",
               colorBackground: "#1F2A44",
               colorInputBackground: "#141c2e",
               colorInputText: "#f1f5f9",
               colorText: "#f1f5f9",
-              colorTextSecondary: "#94a3b8",
+              colorTextSecondary: "#cbd5e1",
               colorNeutral: "#94a3b8",
-              borderRadius: "12px",
+              colorTextOnPrimaryBackground: "#0f172a",
+              borderRadius: "14px",
               fontFamily: "Inter, system-ui, sans-serif",
             },
             elements: {
               rootBox: "w-full",
-              card: "bg-[#1F2A44] border border-[rgba(198,167,94,0.2)] shadow-2xl shadow-black/50 backdrop-blur-md rounded-2xl",
+              cardBox: "w-full",
+              card: "bg-[#1F2A44] border border-[rgba(198,167,94,0.22)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-md rounded-2xl p-6 sm:p-8",
               headerTitle: "hidden",
               headerSubtitle: "hidden",
               socialButtonsBlockButton:
-                "border border-[rgba(198,167,94,0.2)] bg-white/5 text-slate-200 hover:bg-white/10 hover:border-[rgba(198,167,94,0.4)] transition-all rounded-xl",
-              socialButtonsBlockButtonText: "font-medium",
-              dividerLine: "bg-[rgba(198,167,94,0.15)]",
-              dividerText: "text-slate-400 text-xs",
-              formFieldLabel: "text-slate-400 text-xs font-medium",
+                "border border-[rgba(198,167,94,0.18)] bg-white/5 text-slate-200 hover:bg-white/10 hover:border-[rgba(198,167,94,0.35)] transition-all rounded-xl py-2.5",
+              socialButtonsBlockButtonText: "font-semibold text-slate-200 !text-slate-200 text-sm",
+              dividerLine: "bg-[rgba(198,167,94,0.12)]",
+              dividerText: "text-slate-400 !text-slate-400 text-xs font-semibold uppercase tracking-wider",
+              formFieldLabel: "text-slate-300 !text-slate-300 text-xs font-semibold uppercase tracking-wider mb-1.5",
               formFieldInput:
-                "bg-[#141c2e] border border-[rgba(198,167,94,0.2)] text-slate-100 rounded-xl focus:border-[rgba(198,167,94,0.6)] focus:ring-0 placeholder:text-slate-600",
+                "bg-[#141c2e] border border-[rgba(198,167,94,0.18)] text-slate-100 rounded-xl focus:border-gold-500/50 focus:ring-0 placeholder:text-slate-600 transition-all py-2.5",
               formButtonPrimary:
-                "bg-gradient-to-r from-gold-600 to-gold-400 text-slate-900 font-semibold rounded-xl hover:opacity-90 transition-all shadow-lg shadow-gold-500/25",
-              footerActionText: "text-slate-300 font-medium",
-              footerActionLink: "text-gold-400 hover:text-gold-300",
-              footerText: "text-slate-400 font-medium",
-              identityPreviewEditButton: "text-gold-400",
-              formFieldSuccessText: "text-green-400",
-              formFieldErrorText: "text-red-400",
-              alertText: "text-slate-300",
+                "bg-gradient-to-r from-gold-600 to-gold-400 hover:from-gold-500 hover:to-gold-300 text-slate-900 font-bold rounded-xl py-3 transition-all shadow-lg shadow-gold-500/25 active:scale-[0.98]",
+              footerActionText: "text-slate-300 !text-slate-300 font-medium text-sm",
+              footerActionLink: "text-gold-400 hover:text-gold-300 font-bold transition-colors text-sm",
+              footerText: "text-slate-500 !text-slate-500 font-medium text-xs mt-4",
+              identityPreviewEditButton: "text-gold-400 hover:text-gold-300",
+              formFieldSuccessText: "text-green-400 !text-green-400 text-xs",
+              formFieldErrorText: "text-red-400 !text-red-400 text-xs",
+              alert: "bg-red-500/10 border border-red-500/30 text-red-300 rounded-xl p-3",
+              alertText: "text-red-300 !text-red-300 text-xs",
               otpCodeFieldInput:
-                "bg-[#141c2e] border border-[rgba(198,167,94,0.2)] text-slate-100 rounded-xl",
+                "bg-[#141c2e] border border-[rgba(198,167,94,0.18)] text-slate-100 rounded-xl",
             },
           }}
         />
