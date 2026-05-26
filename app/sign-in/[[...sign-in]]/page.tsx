@@ -1,7 +1,6 @@
 "use client";
 
 import { SignIn } from "@clerk/nextjs";
-import { dark } from "@clerk/nextjs/themes";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
 
@@ -40,11 +39,10 @@ export default function SignInPage() {
         {/* Clerk SignIn with custom appearance */}
         <SignIn
           appearance={{
-            baseTheme: dark,
             variables: {
               colorPrimary: "#C6A75E",
-              colorBackground: "#1F2A44",
-              colorInputBackground: "#141c2e",
+              colorBackground: "#253352",
+              colorInputBackground: "#1e273d",
               colorInputText: "#f1f5f9",
               colorText: "#f1f5f9",
               colorTextSecondary: "#cbd5e1",
@@ -56,7 +54,7 @@ export default function SignInPage() {
             elements: {
               rootBox: "w-full",
               cardBox: "w-full",
-              card: "bg-[#1F2A44] border border-[rgba(198,167,94,0.22)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-md rounded-2xl p-6 sm:p-8",
+              card: "bg-[#253352] border border-[rgba(198,167,94,0.22)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-md rounded-2xl p-6 sm:p-8",
               headerTitle: "hidden",
               headerSubtitle: "hidden",
               socialButtonsBlockButton:
@@ -66,7 +64,7 @@ export default function SignInPage() {
               dividerText: "text-slate-400 !text-slate-400 text-xs font-semibold uppercase tracking-wider",
               formFieldLabel: "text-slate-300 !text-slate-300 text-xs font-semibold uppercase tracking-wider mb-1.5",
               formFieldInput:
-                "bg-[#141c2e] border border-[rgba(198,167,94,0.18)] text-slate-100 rounded-xl focus:border-gold-500/50 focus:ring-0 placeholder:text-slate-600 transition-all py-2.5",
+                "bg-[#1e273d] border border-[rgba(198,167,94,0.18)] text-slate-100 rounded-xl focus:border-gold-500/50 focus:ring-0 placeholder:text-slate-600 transition-all py-2.5",
               formButtonPrimary:
                 "bg-gradient-to-r from-gold-600 to-gold-400 hover:from-gold-500 hover:to-gold-300 text-slate-900 font-bold rounded-xl py-3 transition-all shadow-lg shadow-gold-500/25 active:scale-[0.98]",
               footerActionText: "text-slate-300 !text-slate-300 font-medium text-sm",
